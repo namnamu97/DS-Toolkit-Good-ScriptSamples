@@ -101,7 +101,7 @@ columns = {'data_columns': [col.lower() for col in X.columns]}
 with open('columns.json', 'w') as f:
     f.write(json.dumps(columns))
 
-
+__datacolumn = [col for col in X.columns]
 #predict using saved model
 def get_esitmated([datacol]):
     try:
