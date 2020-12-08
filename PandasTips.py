@@ -206,3 +206,50 @@ df3.to_excel(writer, sheet_name='Sheet3')
 
 # Close the Pandas Excel writer and output the Excel file.
 writer.save()
+
+
+##############################################################
+#Import Bigquery to Pandas
+##############################################################
+
+sql = """
+    SELECT *, 'train' AS train_test
+    FROM `TestDemo.1mgtest_train`
+    UNION ALL
+    SELECT *, 'test' AS train_test
+    FROM `TestDemo.1mgtest_test`
+    """
+
+project_id = 'seismic-hexagon-295906'
+
+df = pd.read_gbq(sql, project_id = project_id, dialect = 'standard')
+
+df.head()
+
+##############################################################
+#Statistical Testing for Feature Selection
+##############################################################
+
+#anova testing for numerical input---------------------
+from sklearn.feature_selection import f_classif
+
+p_vals = f_classif(df.select_dtypes(['float64','int64']), df['churn'])[1]
+cols = df.select_dtypes(['float64','int64']).columns
+                   
+for col, p_val in zip(cols, p_vals):
+    if p_val > 0.05:
+        print(f'anova test for {col} is insignificant')
+        
+#chi2 testing for categorical-------------------------
+from sklearn.feature_selection import chi2
+from sklearn.preprocessing import LabelEncoder
+
+#chi2 in sklearn require input to be numerical
+df_cat = df.select_dtypes(['object', 'bool']).drop(['churn', 'train_test'], axis = 1).apply(LabelEncoder().fit_transform)
+
+p_vals = chi2(df_cat, df['churn'])[1]
+cols = df_cat.columns
+
+for col, p_val in zip(cols, p_vals):
+    if p_val > 0.05:
+        print(f'anova test for {col} is insignificant')
