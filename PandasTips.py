@@ -38,6 +38,11 @@ df['class'] = np.select(conditions, choices, default = np.nan)
 #if there is only one condition
 np.where(condition, value if true, else value)
 
+#break numerical values into specified bins
+cut_labels_4 = ['silver', 'gold', 'platinum', 'diamond']
+cut_bins = [0, 70000, 100000, 130000, 200000]
+df['cut_ex1'] = pd.cut(df['ext price'], bins=cut_bins, labels=cut_labels_4)
+
 
 ##############################################################
 #Pandas groupby, flexiible returns
