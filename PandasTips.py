@@ -320,3 +320,12 @@ def mapk(actual, predicted, k=10):
             The mean average precision at k over the input lists
     """
     return np.mean([apk(a,p,k) for a,p in zip(actual, predicted)])
+
+# calculate the MAP
+    actual = []
+    pred = []
+    for k,_ in recomendations_dict.items():
+        actual.append(list(interactions_valid_dict[k]))
+        pred.append(list(recomendations_dict[k]))
+
+    result = mapk(actual,pred)
