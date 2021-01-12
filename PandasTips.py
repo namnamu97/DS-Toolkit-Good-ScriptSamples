@@ -329,3 +329,78 @@ def mapk(actual, predicted, k=10):
         pred.append(list(recomendations_dict[k]))
 
     result = mapk(actual,pred)
+
+    
+##############################################################
+#PVC-2D Viz clustering
+##############################################################
+
+from sklearn.decomposition import PCA
+
+def prepare_pca(n_components, data, kmeans_labels):
+    names = ['x', 'y', 'z']
+    matrix = PCA(n_components=n_components).fit_transform(data)
+    df_matrix = pd.DataFrame(matrix)
+    df_matrix.rename({i:names[i] for i in range(n_components)}, axis=1, inplace=True)
+    df_matrix['labels'] = kmeans_labels
+    
+    return df_matrix
+
+plt.figure(figsize = (10,12))
+sns.scatterplot(x=pca_df.x, y=pca_df.y, hue=pca_df.labels, 
+                palette="Set2")
+plt.show()
+
+##############################################################
+# Elbow Viz for KMeans CLustering
+##############################################################
+
+# elbow method
+
+#model fit: helper function
+from sklearn.cluster import KMeans
+from yellowbrick.cluster.elbow import kelbow_visualizer
+
+# Use the quick method and immediately show the figure
+kelbow_visualizer(KMeans(random_state=50), cluster_stand, k=(2,26))
+
+##############################################################
+# Viz for Clustering Attributes
+##############################################################
+
+# model fitting
+
+from sklearn.cluster import KMeans
+
+cluster_info = cluster_stand.copy()
+
+kmeans_stand = KMeans(n_clusters = 6, random_state = 50)
+kmeans_stand.fit(cluster_info)
+
+# Gen df that contains information in each cluster
+
+cluster_info['cluster'] = kmeans_stand.predict(cluster_info)
+
+cluster_info = cluster_raw.reset_index().merge(cluster_info.reset_index()[['user_id', 'cluster']], on = 'user_id')
+
+# define aggregations for the groupby
+agg = {'user_id':'count'}
+for col in cluster_info.columns[1:]:
+    agg[col] = 'mean'
+    
+# cluster info table
+cluster_info = cluster_info.groupby('cluster').agg(agg).\
+                                rename(columns = {'user_id': 'count'}).transpose().round(4)
+
+# unstack the cluster attributes
+tidy = cluster_info.transpose().drop(['count', 'cluster', 'num_trans'], axis = 1).reset_index()
+tidy = tidy.melt(id_vars = 'cluster')
+
+plt.figure(figsize = (20,16))
+sns.set_style('whitegrid')
+ax = sns.barplot(x = 'cluster', y = 'value', hue = 'variable', palette = 'Set2',data = tidy)
+plt.setp(ax.get_legend().get_texts(), fontsize='25') # for legend text
+plt.setp(ax.get_legend().get_title(), fontsize='25') # for legend title
+plt.title('Voucher Clustering', fontsize = 20)
+plt.tight_layout()
+plt.show()
