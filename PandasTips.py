@@ -444,3 +444,20 @@ class NumericalTransformer(BaseEstimator, TransformerMixin):
 ##############################################################
 # Pipeline Creation
 ##############################################################
+set_config(display = 'diagram')
+
+numerical_col = X.select_dtypes(['int64', 'float64']).columns
+categorical_col = X.select_dtypes(['object', 'bool']).columns
+
+transformation = [('cat', OneHotEncoder(). categorical_col), ('num', MinMaxScaler(), numerical_col)]
+
+col_transformer = ColumnTransformer(transformer = transformation)
+
+model = SVR()
+
+pipline = Pipeline(steps = [
+    ('prep', col_transform),
+    ('model', model)
+    ]
+              
+pipeline #show the pipeline
