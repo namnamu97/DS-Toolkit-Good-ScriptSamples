@@ -461,3 +461,112 @@ pipline = Pipeline(steps = [
     ]
               
 pipeline #show the pipeline
+
+##############################################################
+# Sklearn Custom Transformer Sample Code#
+##############################################################
+
+# Selecting features
+class FeatureSelection(BaseEstimation, TransformerMixin):
+
+    def __init__(self, feature_names):
+        self.feature_names = feature_names
+
+    # return self, not thing to do in the fit method
+    def fit(self, X, y= None):
+        return self
+
+    # method that describes what we need this transformer to do
+    def transform(self, X, y = None):
+        return X[self.feature_names]
+
+# Custom transformer that breaks dates column with
+# year, motnh and day into seperatecolumns
+# and converts certain categorical features into binary
+class CategoricalTransformer(BaseEstimation, TransformerMixin):
+    def __init__(self, use_dates = ['year', 'month', 'day']):
+        self.use_dates = use_dates
+
+    def fit(self, X, y = None):
+        return self
+
+    def get_year(self, X, y = None):
+        return str(obj)[:4]
+
+    def get_month(self, obj):
+        return str(obj)[4:6]
+
+    def get_day(self, obj):
+        return str(obj)[6:8]
+
+    def create_binary(self, obj):
+        if obj == 0:
+            return 'No'
+        return 'Yes'
+
+    def transform(self, X, y = None):
+        for spec in self.use_dates:
+            exec(f"X.loc[:, '{spec}' = X['date'].apply(self.get_{spec})")
+
+        X = X.drop('date', axis = 1)
+
+        X.loc[:, 'view'] = x['view'].apply(self.create_binary())
+        X.loc[:, 'waterfront'] = x['waterfront'].apply(self.create_binary())
+        X.loc[:, 'yr_renovate'] = x['yr_renovate'].apply(self.create_binary())
+        
+    # returns numpy array
+        return X.values
+
+# Numerical custom transformer
+class NumericalTransformer(BaseEstimation, TransformerMixin):
+    def __init__(self, bath_per_bed = True, years_old = True):
+        self.bath_per_bed = bath_per_bed
+        self.years_old = years_old
+        
+    def fit(self, X, y = None):
+        return self
+    
+    def transform(self, X, y = None):
+        if self.bath_per_bed:
+            X.loc[:, 'bat_per_bed'] = X['bathroom'] / X['bedrooms']
+            
+        if self.years_old:
+            X.loc[:, 'years_old'] = 2019 - X['yr_built']
+            
+        X.drop(columns = 'yr_build', inplace = True)
+        
+        X.replace([np.inf, -np.inf], np.nan)
+        
+        return X.values
+    
+# let's start with the pipeline
+numerical_columns = [...]
+categorical_columns = [...]
+
+categorical_pipeline = Pipeline(steps = [
+    ('cat_selector', FeatureSelection(categorical_columns)),
+    ('cat_transformer', CategoricalTransformer),
+    ('one_hot_encoder', OneHotEncoder())
+])
+
+numerical_pipeline = Pipeline(steps = [
+    ('num_selector', FeatureSelection(numerical_columns)),
+    ('num_transformer', NumericalTransformer()),
+    ('imputer', SimpleImputer()),
+    ('std_scaler', StandardScaler())
+])
+
+# Combine the two feature pipelines
+feature_pipeline = FeatureUnion(transformer_list = [
+    ('categorical_pipeline', categorical_pipeline),
+    ('numerical_pipeline', numerical_pipeline)
+])
+
+# Create full pipeline model
+model_pipeline = Pipeline(steps = [
+    ('columns_transformer', feature_pipeline),
+    ('model', LinearRegression())
+])
+
+model_pipeline.fit(X_train, y_train)
+model_pipeline.score(y_test, y_pred)
