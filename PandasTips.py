@@ -574,6 +574,7 @@ model_pipeline.score(y_test, y_pred)
 ##############################################################
 # Sklearn Custom Transformer Sample Code#
 ##############################################################
+import regex as re
                    
 # text cleaning
 url = 'https://raw.githubusercontent.com/stopwords/vietnamese-stopwords/master/vietnamese-stopwords.txt'
