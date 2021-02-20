@@ -570,3 +570,79 @@ model_pipeline = Pipeline(steps = [
 
 model_pipeline.fit(X_train, y_train)
 model_pipeline.score(y_test, y_pred)
+
+##############################################################
+# Sklearn Custom Transformer Sample Code#
+##############################################################
+                   
+# text cleaning
+url = 'https://raw.githubusercontent.com/stopwords/vietnamese-stopwords/master/vietnamese-stopwords.txt'
+stop_words = [line.decode('utf-8').strip() for line in urllib.request.urlopen(url)]
+                   
+class PreprocessingText(object):
+    def __init__(self, stop_words=None):
+        super().__init__()
+        self.stop_words = stop_words
+
+    @staticmethod
+    def remove_stopwords(text):
+        stop_words = set(stop_words)
+        filtered_text = [word for word in text.split() if word not in stop_words]
+        return " ".join(filtered_text)
+
+    @staticmethod
+    def remove_whitespace(text):
+        return " ".join(text.split())
+
+    @staticmethod
+    def remove_number(text):
+        result = re.sub(r'\d+', '', text)
+        return result
+
+    @staticmethod
+    def text_lowercase(text):
+        try:
+            text = text.lower()
+        except:
+            pass
+        return text
+
+    @staticmethod
+    def remove_punctuation(text):
+        """
+        Remove Punctuations: Punctuations consists of !,<@#&$ etc.
+        """
+        punc = re.compile(r'[^\w\s]')
+        return punc.sub(r' ', text)
+        return text.translate(str.maketrans(' ', ' ', string.punctuation))
+        filtered_text = [word for word in text.split() if word not in string.punctuation]
+        return " ".join(filtered_text)
+
+    @staticmethod
+    def convert_emojis(text):
+        for emot in UNICODE_EMO:
+            text = re.sub(r'(' + emot + ')', "_".join(UNICODE_EMO[emot].replace(",", "").replace(":", "").split()),
+                          text)
+        return text
+
+    @staticmethod
+    def remove_urls(text):
+        url_pattern = re.compile(r'https?://\S+|www\.\S+')
+        return url_pattern.sub(r'', text)
+
+    @staticmethod
+    def remove_html(text):
+        html_pattern = re.compile('<.*?>')
+        return html_pattern.sub(r'', text)
+
+    @staticmethod
+    def remove_emoji(text):
+        emoji_pattern = re.compile("["
+                                   u"\U0001F600-\U0001F64F"  # emoticons
+                                   u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+                                   u"\U0001F680-\U0001F6FF"  # transport & map symbols
+                                   u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+                                   u"\U00002702-\U000027B0"
+                                   u"\U000024C2-\U0001F251"
+                                   "]+", flags=re.UNICODE)
+        return emoji_pattern.sub(r'', text)
