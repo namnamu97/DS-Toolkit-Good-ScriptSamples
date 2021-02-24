@@ -647,3 +647,28 @@ class PreprocessingText(object):
                                    u"\U000024C2-\U0001F251"
                                    "]+", flags=re.UNICODE)
         return emoji_pattern.sub(r'', text)
+
+##############################################################
+# Reading XML file
+##############################################################
+                   
+import xml.etree.ElementTree as ET
+import pandas as pd
+import codecs
+
+## open notebook and save your xml file to text.xml 
+with codecs.open('vinmart_20Jul.xml', 'r', encoding='utf8') as f:
+    tt = f.read()
+
+def xml2df(xml_data):
+    root = ET.XML(xml_data)
+    all_records = []
+    for i, child in enumerate(root):
+        record = {}
+        for sub_child in child:
+            record[sub_child.tag] = sub_child.text
+        all_records.append(record)
+    return pd.DataFrame(all_records)
+
+df = xml2df(tt)
+df.head()
