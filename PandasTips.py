@@ -672,3 +672,54 @@ def xml2df(xml_data):
 
 df = xml2df(tt)
 df.head()
+
+##############################################################
+# Tensorflow 2.0 Model Example
+##############################################################
+                   
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+
+# subclassing
+class ModelSubClass(keras.Model):
+    def __init__(self):
+        super(ModelSubClass, self).__init__()
+        self.conv1 = layers.Conv2D(128, kernel_size = 5, strides = 2, activation = 'relu')
+        self.max1 = layers.MaxPooling2D(kernel_size = 2, stride = 2)
+        self.bn1 = layers.BatchNormalization()
+        
+        self.conv2 = layers.Conv2D(256, kernel_size = 5, stride = 2, activation = 'relu')
+        self.max2 = layers.MaxPooling2D(kernel_size = 2, strides = 2)
+        self.bn2 = layers.BatchNormalization()
+        
+        self.fc1 = layers.Dense(1024, activation = 'relu')
+        self.fc2 = layers.Dense(512, activation='relu')
+        self.fc3 = layers.Dense(6)
+        
+    def call(self, input_tensor, training = False):
+        # conv layer 1
+        x = self.conv1(input_tensor)
+        x = self.max1(x)
+        x = self.bn1(x)
+        # conv layer 2
+        x = self.conv2(input_tensor)
+        x = self.max2(x)
+        x = self.bn2(x)
+        # fully connected layers
+        x = self.fc1(x)
+        x = self.fc2(x)
+        x = self.fc3(x)
+        return x
+    
+model = ModelSubClass()
+
+model.compile(
+    loss = keras.losses.SparseCategoricalCrossEntropy(from_logit = True),
+    optimizer = keras.optimizer.Adam(lr = 1e-3)
+    metrics = ['accuracy']
+)
+
+model.fit(X_train, y_train, batch_size = 128)
+model.evaluate(X_test, y_test, batch_size = 64)
+
