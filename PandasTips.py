@@ -729,7 +729,7 @@ model.evaluate(X_test, y_test, batch_size = 64)
                    
 
 from sklearn.model_selection import GridSearchCV
-
+from sklearn.model_selection import ShuffleSplit
 from sklearn.linear_model import Lasso
 from sklearn.tree import DecisionTreeRegressor
 
