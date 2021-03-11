@@ -770,3 +770,68 @@ def find_best_model_using_gridsearchcv(X,y):
     return pd.DataFrame(scores,columns=['model','best_score','best_params'])
 
 find_best_model_using_gridsearchcv(X,y)
+
+##############################################################
+# Pandas Pre-Statistics calculation
+##############################################################                
+def pre_stat(data):
+    data = data.drop(columns = ['user_id', 'csn']).copy()
+    
+    # statistics to be interested
+    COL = []
+    DTYPE = []
+    MISSING = []
+    NUNIQUE = []
+    MOST_FREQ = []
+    MOST_FREQ_PERCEN = []
+    STD = []
+    MIN_ = []
+    Q1 = []
+    MEAN = []
+    MEDIAN = []
+    Q3 = []
+    MAX = []
+    
+    # looping throught each columns
+    for col in data.columns:
+        # declare a series for conviniency
+        colval = data[col].copy()
+        # calculating statistics
+        COL.append(col)
+        DTYPE.append(colval.dtype)
+        MISSING.append(round((colval.isnull().sum()/len(data))*100, 2))
+        NUNIQUE.append(colval.nunique())
+        MOST_FREQ.append(colval.value_counts().index[0])
+        MOST_FREQ_PERCEN.append(round((colval.value_counts().iloc[0] / len(data))*100, 2))
+
+            
+        if colval.dtype == 'float64' or colval.dtype == 'int64':
+            STD.append(colval.std())
+            MIN_.append(colval.min())
+            Q1.append(colval.quantile(.25))
+            MEAN.append(colval.mean())
+            MEDIAN.append(colval.median())
+            Q3.append(colval.quantile(.75))
+            MAX.append(colval.max())
+        else:
+            STD.append(np.nan)
+            MIN_.append(np.nan)
+            Q1.append(np.nan)
+            MEAN.append(np.nan)
+            MEDIAN.append(np.nan)
+            Q3.append(np.nan)
+            MAX.append(np.nan)        
+
+    return pd.DataFrame({
+                        'COL':COL,
+                        'DTYPE':DTYPE,
+                        'MISSING':MISSING,
+                        'NUNIQUE': NUNIQUE,
+                        'MOST_FREQ':MOST_FREQ,
+                        'MOST_FREQ_PERCEN':MOST_FREQ_PERCEN,
+                        'MIN':MIN_,
+                        'Q1':Q1,
+                        'MEAN':MEAN,
+                        'MEDIAN':MEDIAN,
+                        'Q3':Q3,
+                        'MAX':MAX})
