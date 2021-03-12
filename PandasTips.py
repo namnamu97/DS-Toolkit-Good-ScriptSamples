@@ -262,6 +262,28 @@ cols = df_cat.columns
 for col, p_val in zip(cols, p_vals):
     if p_val > 0.05:
         print(f'anova test for {col} is insignificant')
+        
+##############################################################
+# Correlation heatmap
+##############################################################
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+train = read_csv("./train.csv")
+
+def correlation_heatmap(train):
+    correlations = train.corr()
+
+    fig, ax = plt.subplots(figsize=(10,10))
+    sns.heatmap(correlations, vmax=1.0, center=0, fmt='.2f',
+                square=True, linewidths=.5, annot=True, cbar_kws={"shrink": .70})
+    plt.show();
+    
+correlation_heatmap(train)
+view raw
 
 ##############################################################
 #Calculating MAP for RecSys
