@@ -246,6 +246,10 @@ for col, p_val in zip(cols, p_vals):
         print(f'anova test for {col} is insignificant')
         
 #chi2 testing for categorical-------------------------
+
+# chi2 test for cat-cat correlation
+# h0: two var are independent
+# h1: two var are not independent
 from sklearn.feature_selection import chi2
 from sklearn.preprocessing import LabelEncoder
 
