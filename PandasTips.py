@@ -235,7 +235,9 @@ df.head()
 #Statistical Testing for Feature Selection
 ##############################################################
 
-#anova testing for numerical input---------------------
+#anova testing for numerical input and categorical target---------------------
+# h0: means in all group are indifferent -> the var is not a good classifier
+# h1: means in at least one group are different -> the var can be a suitable classifier
 from sklearn.feature_selection import f_classif
 
 p_vals = f_classif(df.select_dtypes(['float64','int64']), df['churn'])[1]
@@ -245,7 +247,7 @@ for col, p_val in zip(cols, p_vals):
     if p_val > 0.05:
         print(f'anova test for {col} is insignificant')
         
-#chi2 testing for categorical-------------------------
+#chi2 testing for categorical input and categorical target-------------------------
 
 # chi2 test for cat-cat correlation
 # h0: two var are independent
