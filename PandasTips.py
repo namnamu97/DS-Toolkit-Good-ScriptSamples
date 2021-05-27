@@ -801,7 +801,7 @@ find_best_model_using_gridsearchcv(X,y)
 
 ##############################################################
 # Pandas Pre-Statistics calculation
-##############################################################                
+##############################################################
 def pre_stat(data):
     data = data.drop(columns = ['user_id', 'csn']).copy()
     
@@ -863,3 +863,49 @@ def pre_stat(data):
                         'MEDIAN':MEDIAN,
                         'Q3':Q3,
                         'MAX':MAX})
+
+##############################################################
+# Sk-learn Ulti Custom Transformer
+##############################################################
+                   
+######## SUPPORTING CLASSES ########
+class PipelineLogger(object):
+    def __init__(self):
+        pass
+        
+    def log_start(self):
+        self.start_time = time()
+        print(f'======== {self.__class__.__name__} - START ========')
+        return None
+        
+    def log_finish(self):
+        self.duration = time() - self.start_time
+        print(f'======== {self.__class__.__name__} - FINISH =======> Take: {self.duration:.6f}(s)')
+
+class featureUnion(FeatureUnion):
+    def _hstack(self, Xs):
+        cols = [X.columns.tolist() for X in Xs]
+        dtypes = []
+        for X in Xs:
+            dtypes.append([str(X[col].dtype) for col in X])
+        cols = np.hstack(cols)
+        dtypes = np.hstack(dtypes)
+        data = pd.DataFrame(super()._hstack(Xs), columns = cols)
+        print('====Converting columns types====')
+        for col, dtype in tqdm(zip(cols, dtypes)):
+            data[col] = data[col].astype(dtype)
+        return data
+
+class columnTransformer(ColumnTransformer):
+    def _hstack(self, Xs):
+        cols = [X.columns.tolist() for X in Xs]
+        dtypes = []
+        for X in Xs:
+            dtypes.append([str(X[col].dtype) for col in X])
+        cols = np.hstack(cols)
+        dtypes = np.hstack(dtypes)
+        data = pd.DataFrame(super()._hstack(Xs), columns = cols)
+        print('====Converting columns types====')
+        for col, dtype in tqdm(zip(cols, dtypes)):
+            data[col] = data[col].astype(dtype)
+        return data
