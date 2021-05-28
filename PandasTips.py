@@ -909,3 +909,16 @@ class columnTransformer(ColumnTransformer):
         for col, dtype in tqdm(zip(cols, dtypes)):
             data[col] = data[col].astype(dtype)
         return data
+
+##############################################################
+# Clearn correlated features
+##############################################################
+def find_correlated_features(data,threshold):
+    col_corr = set()
+    corr_metrix = data.corr()
+    for i in range(len(corr_metrix.columns)):
+        for j in range(i):
+            if((corr_metrix.iloc[i,j])>threshold):
+                column_name = corr_metrix.columns[i]
+                col_corr.add(column_name)
+    return col_corr
