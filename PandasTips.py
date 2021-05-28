@@ -922,3 +922,9 @@ def find_correlated_features(data,threshold):
                 column_name = corr_metrix.columns[i]
                 col_corr.add(column_name)
     return col_corr
+                   
+# eg:
+corelated_features = find_correlated_features(x_train,0.7)
+print(corelated_features)
+x_train = x_train.drop(corelated_features,axis=1)
+x_train.head()
