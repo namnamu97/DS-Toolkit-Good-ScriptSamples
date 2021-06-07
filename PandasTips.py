@@ -928,3 +928,33 @@ corelated_features = find_correlated_features(x_train,0.7)
 print(corelated_features)
 x_train = x_train.drop(corelated_features,axis=1)
 x_train.head()
+
+##############################################################
+# Clearn correlated features
+##############################################################
+
+from hyperopt import tpe, hp, fmin, STATUS_OK, Trials
+from hyperopt.pyll.base import scope
+
+space = {
+    'n_estimators': hp.choice('n_estimators', [i for i in range(100,700,100)]),
+    'max_depth': hp.quniform('max_depth', 1, 15, 1),
+    'criterion': hp.choice ('criterion', ['gini', 'entropy'])
+}
+
+# define objective function to minimize
+def hyperparameter_tuning(params):
+  clf = RandomForestClassifier(**params, n_jobs = 1)
+  acc = cross_val_score(clf, X, y, scoring = "accurary").mean()
+  return {'loss': -acc, 'status': STATUS_OK}
+
+# initialize trial object
+trials = Trials()
+
+best = fmin(
+    fn = hyperparameter_tuning,
+    space = space,
+    algo = tpe.suggest,
+    max_evals = 100,
+    trials = trials
+)
