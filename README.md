@@ -8,3 +8,4 @@ Some useful refernces: <br>
 - Vietnamese document classification: https://github.com/nguyenvanhieuvn/text-classification-tutorial/blob/master/text_classification_tutorial.ipynb
 - Gradient Boosting Trees HyperSpace: https://github.com/talperetz/hyperspace
 - Hyper-parameter tool series: https://medium.datadriveninvestor.com/alternative-hyperparameter-optimization-techniques-you-need-to-know-part-1-3f68d0448fcd
+- Machine Learning project structure: https://github.com/dssg/hitchhikers-guide/tree/master/sources/curriculum/0_before_you_start/pipelines-and-project-workflow
