@@ -9,3 +9,6 @@ Some useful refernces: <br>
 - Gradient Boosting Trees HyperSpace: https://github.com/talperetz/hyperspace
 - Hyper-parameter tool series: https://medium.datadriveninvestor.com/alternative-hyperparameter-optimization-techniques-you-need-to-know-part-1-3f68d0448fcd
 - Machine Learning project structure: https://github.com/dssg/hitchhikers-guide/tree/master/sources/curriculum/0_before_you_start/pipelines-and-project-workflow
+- Simple Airflow ETL weather dataset:http://michael-harmon.com/blog/AirflowETL.html
+- Simple Airflow ETL covid dataset: https://python.plainenglish.io/simple-etl-with-airflow-372b0109549
+- Keeping your ML model in shape with Kafka, Airflow and MLFlow: https://www.vantage-ai.com/en/blog/keeping-your-ml-model-in-shape-with-kafka-airflow-and-mlflow
