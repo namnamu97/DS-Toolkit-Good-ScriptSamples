@@ -57,7 +57,13 @@ from pyspark.sql.functions import udf
 def add_cols(x, y):
     return x+y
 
+@udf(returnType = StringType)
+def switchGender(x)
+    if x == 'Male':
+        return 'Female'
+    return 'Male'
+
 df = (df
     .withColumn('SumFlipperMass', add_cols(df['Flipper'], df['Mass']))
-    .withColumn('ManiString')
+    .withColumn('SwitchGender', switchGender(df['Sex']))
     )
