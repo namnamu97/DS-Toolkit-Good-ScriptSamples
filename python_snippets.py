@@ -6,3 +6,7 @@ logging.basicConfig(
     level = logging.INFO
     )
 logger = logging.getLogger(__name__)
+
+# create virtualenv for python 3
+$ python3 -m venv python3_venv
+$ source python3_venv/bin/activate
