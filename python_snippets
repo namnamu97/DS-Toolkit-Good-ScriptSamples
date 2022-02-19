@@ -1,0 +1,8 @@
+# logger
+import logging
+logging.basicConfig(
+    format='%(asctime)s :: %(name)s :: %(funcName)s :: Line %(lineno)d :: %(message)s',
+    datefmt='%d-%m-%y %H:%M:%S',
+    level = logging.INFO
+    )
+logger = logging.getLogger(__name__)
