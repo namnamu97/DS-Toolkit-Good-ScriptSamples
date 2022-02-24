@@ -1,0 +1,32 @@
+Step 1: Install PostgreSQL
+
+$ sudo apt install postgresql
+
+Step 2: Set root user credentials
+
+$ sudo -u postgres psql
+
+(in case the comment above does not work, run the following command:
+$ sudo service postgresql restart
+)
+
+\\ ALTER USER postgres PASSWORD 'newpassword';
+You can now exit the PostgreSQL shell using the command quit.
+
+Henceforth you can login to the PostgreSQL shell using the command
+
+$ psql -U postgres -h localhost
+
+Step 3: Create multiple users (optional)
+
+You can the list the users in PostgreSQL using the command
+
+\\ \du
+
+You can create user using the command
+
+\\ CREATE USER arul WITH SUPERUSER CREATEDB LOGIN ENCRYPTED PASSWORD 'admin';
+
+You should also create a database with the same name as the user. Create database using the command
+
+\\ CREATE DATABASE arul;
