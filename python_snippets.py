@@ -100,3 +100,45 @@ df_list = []
 response = s3.list_objects(Bucket = bucket_name, Prefix = prefix)
 for file in response['Contents']:
     obj = s3.get_object(bucket['Key'])
+
+#######################################
+# Example of ultising config file
+#######################################
+! pip install configparser
+
+# config file
+# [mysql_config]
+# hostname = my_host.com
+# port = 1234
+# username = my_user_name
+# password = my_password
+# database = db_name
+
+# extract_mysql_script.py
+import pymysql
+import csv
+import boto3
+import configparser
+
+parser = configparser.ConfigParser()
+parser.read('pipeline.conf')
+config_part = 'mysql_config'
+hostname = parser.get(config_part, 'hostname')
+port = parser.get(config_part, 'port')
+username = parser.get(config_part, 'username')
+password = parser.get(config_part, 'password')
+dbname = parser.get(config_part, 'database')
+
+conn = pymysql.connect(
+    host = hostname,
+    user = username,
+    password = password,
+    db = dbname,
+    port = int(port)
+    )
+
+if conn is None:
+    print('Error connecting to the MySQL database')
+else:
+    print('MySQL connection established')
+
