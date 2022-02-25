@@ -107,12 +107,19 @@ for file in response['Contents']:
 ! pip install configparser
 
 # config file
+
 # [mysql_config]
 # hostname = my_host.com
 # port = 1234
 # username = my_user_name
 # password = my_password
 # database = db_name
+# [aws_boto_credentials]
+# access_key = ***********
+# secret_key = ***********
+# bucket_name = pipeline-bucket
+# account_id = namhnguyen997
+
 
 # extract_mysql_script.py
 import pymysql
@@ -122,12 +129,12 @@ import configparser
 
 parser = configparser.ConfigParser()
 parser.read('pipeline.conf')
-config_part = 'mysql_config'
-hostname = parser.get(config_part, 'hostname')
-port = parser.get(config_part, 'port')
-username = parser.get(config_part, 'username')
-password = parser.get(config_part, 'password')
-dbname = parser.get(config_part, 'database')
+mysql_config_part = 'mysql_config'
+hostname = parser.get(mysql_config_part, 'hostname')
+port = parser.get(mysql_config_part, 'port')
+username = parser.get(mysql_config_part, 'username')
+password = parser.get(mysql_config_part, 'password')
+dbname = parser.get(mysql_config_part, 'database')
 
 conn = pymysql.connect(
     host = hostname,
@@ -141,4 +148,40 @@ if conn is None:
     print('Error connecting to the MySQL database')
 else:
     print('MySQL connection established')
+
+m_querry = 'SELECT * FROM Orders;'
+local_filename = 'order_extract.csv'
+
+m_cursor = conn.m_cursor()
+m_cursor.execute(m_query)
+results = m_cursor.fetchall()
+
+with open(local_filename, 'w') as f:
+    csv_w = csv.writer(f, delimter = '|')
+    csv_w.writerows(results)
+    f.close()
+    m_cursor.close()
+    conn.close()
+
+# load the aws_boto_credentials values
+parset = configparser.ConfigParser()
+parser.read('pipeline.conf')
+aws_config_part = 'aws_boto_credentials'
+access_key = parser.get(aws_config_part, 'access_key')
+secret_key = parser.get(aws_config_part, 'secret_key')
+bucket_name = parser.get(aws_config_part, 'bucket_name')
+
+s3 = boto3.client(
+    service_name = 's3',
+    aws_access_key_id = access_key,
+    aws_secret_access_key = secret_key
+)
+
+s3_file = local_filename
+
+s3.upload_file(
+    Filename = local_filename,
+    Bucket = bucket_name,
+    Key = s3_file
+    )
 
