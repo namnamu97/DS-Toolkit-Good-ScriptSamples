@@ -34,9 +34,36 @@ if __name__ == '__main__':
 
 $ python3 test_argparse.py -r 3 -H 4
 
+#######################################
+# multi-processing in pandas
+#######################################
+from multiprocessing import Pool
+import pandas as pd
+import numpy as np
+import os
+
+def func(x):
+    pass
+
+n_cores = os.cpu_count()
+
+def parallel_df(
+    df,
+    func,
+    n_cores
+):
+    df_split = np.array_split(df, n_cores)
+
+    pool = Pool(n_cores)
+    df = pd.concat(pool.map(func, df_split))
+    
+    pool.close()
+    pool.join()
+
+    return df
 
 #######################################
-# theading for I/O tasks
+# threading for I/O tasks
 #######################################
 
 import threading
