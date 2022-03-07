@@ -35,6 +35,29 @@ if __name__ == '__main__':
 $ python3 test_argparse.py -r 3 -H 4
 
 
+#######################################
+# theading for I/O tasks
+#######################################
+
+import threading
+
+def do_request():
+    pass
+
+threads = []
+num_threads = 10
+
+for i in range(num_threads):
+    t = threading.Thread(target = do_request)
+    t.daemon = True
+    threads.append(t)
+
+for i in range(num_threads):
+    threads[i].start()
+
+for i in range(num_threads):
+    threads[i].join()
+
 
 #######################################
 # create virtualenv for python 3
