@@ -176,3 +176,60 @@ s3.upload_file(
     Key = s3_file
     )
 
+#######################################
+# XML to Pandas
+#######################################
+
+import pandas as pd
+import xml.etree.ElementTree as et
+
+xml = '''<breakfast_menu>
+    <food>
+        <name>Belgian Waffles</name>
+        <price>$5.95</price>
+        <description>Two of our famous Belgian Waffles with plenty of real maple syrup</description>
+        <calories>650</calories>
+    </food>
+    <food>
+        <name>Strawberry Belgian Waffles</name>
+        <price>$7.95</price>
+        <description>Light Belgian waffles covered with strawberries and whipped cream</description>
+        <calories>900</calories>
+    </food>
+'''
+
+xml_file = 'breakfast.xml'
+
+# Method 1: parsing through xml package
+ 
+# if the input is a file
+tree = et.parse(xml_file)
+root = tree.getroot()
+# or if it a string variable
+root = et.fromstring(xml)
+
+def parse_xml(root):
+    menu_dict = {}
+    menu_dict['name'] = []
+    menu_dict['price'] = []
+    menu_dict['des'] = []
+    menu_dict['calo'] = []
+    
+    for item in root:
+        menu_dict['name'].append(item[0].text)
+        menu_dict['price'].append(item[1].text)
+        menu_dict['des'].append(item[2].text)
+        menu_dict['calo'].append(item[3].text)
+
+    return menu_dict
+
+def to_dataframe(dct):
+    return pd.DataFrame(data = parse_xml(root))
+
+# Method 2: directly through pandas read_xml
+df = pd.read_xml(root)
+        
+
+    
+
+
