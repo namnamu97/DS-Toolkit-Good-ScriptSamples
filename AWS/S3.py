@@ -18,7 +18,6 @@ s3 = boto3.client(
 )
 
 # creating a new bucket
-# creating a new bucket
 bucket_name = 'nhnam23-boto3-test'
 location = {'LocationConstraint': AWS_REGION}
 
