@@ -1,0 +1,7 @@
+[
+  "test_math_func.py::test_math_product",
+  "test_math_func.py::test_math_sum",
+  "test_parameterize.py::test_add[10.5-25.5-36]",
+  "test_parameterize.py::test_add[7-3-10]",
+  "test_parameterize.py::test_add[Hello- World-Hello World]"
+]
