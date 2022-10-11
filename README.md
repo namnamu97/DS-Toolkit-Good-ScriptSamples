@@ -12,3 +12,5 @@ Some useful refernces: <br>
 - Simple Airflow ETL weather dataset:http://michael-harmon.com/blog/AirflowETL.html
 - Simple Airflow ETL covid dataset: https://python.plainenglish.io/simple-etl-with-airflow-372b0109549
 - Keeping your ML model in shape with Kafka, Airflow and MLFlow: https://www.vantage-ai.com/en/blog/keeping-your-ml-model-in-shape-with-kafka-airflow-and-mlflow
+- Clustering Companies Based on Stock Price Movements: https://www.kaggle.com/code/demirkaya/clustering-companies-based-on-stock-price-movement/notebook
+- Home Credit Default "Start Here: A Gentle Introduction" : https://www.kaggle.com/code/willkoehrsen/start-here-a-gentle-introduction
