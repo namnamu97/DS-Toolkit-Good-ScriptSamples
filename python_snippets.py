@@ -10,6 +10,22 @@ logging.basicConfig(
     )
 logger = logging.getLogger(__name__)
 
+def log_metadata(func):
+
+    def log_wrapper():
+        print(f'Adding functionality to {func.__name__}')
+        # do some other thing
+        return func()
+
+    return log_wrapper
+
+
+@log_metadata
+def some_func():
+    print('do some thing')
+    
+some_func()
+
 #######################################
 # argparse
 #######################################
