@@ -246,6 +246,36 @@ def to_dataframe(dct):
 df = pd.read_xml(root)
         
 
-    
+#######################################
+# Crawl Data
+#######################################
 
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+# Send a GET request to the website
+url = 'https://www.example.com'
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+}
+response = requests.get(url, headers=headers)
+
+# Parse the HTML content using BeautifulSoup
+soup = BeautifulSoup(response.content, 'html.parser')
+
+# Find the links on the page
+links = soup.find_all('a')
+
+# Extract the link text and URLs and store them in a pandas DataFrame
+link_data = []
+for link in links:
+    link_text = link.text
+    link_url = link.get('href')
+    link_data.append({'text': link_text, 'url': link_url})
+
+df = pd.DataFrame(link_data)
+
+# Export the data to a CSV file
+df.to_csv('links.csv', index=False)
 
